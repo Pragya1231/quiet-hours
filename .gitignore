@@ -1,0 +1,9 @@
+# Next.js
+next-app/node_modules/
+next-app/.next/
+next-app/.env*
+.DS_Store
+
+# Supabase
+supabase/node_modules/
+supabase/.env*
