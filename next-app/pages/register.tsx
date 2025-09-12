@@ -24,7 +24,8 @@ export default function Register() {
       password,
       options: {
         data: { full_name: firstname }, // goes to raw_user_meta_data
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL + '/dashboard'
+
       },
     });
 
