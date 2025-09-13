@@ -17,6 +17,7 @@ export default function Register() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Redirect URL:', process.env.NEXT_PUBLIC_SITE_URL + '/dashboard');
 
     // ✅ Create user in auth
     const { data, error } = await supabase.auth.signUp({
