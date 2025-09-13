@@ -164,6 +164,8 @@ export default function Dashboard() {
         onSubmit={editingBlock ? saveEdit : addBlock}
         className="space-y-4 mb-8"
       >
+        {/* Block Title */}
+        <label className="block font-medium">Block Title</label>
         <input
           type="text"
           placeholder="Block Title"
@@ -172,6 +174,9 @@ export default function Dashboard() {
           className="border p-2 w-full"
           required
         />
+
+        {/* Start Time */}
+        <label className="block font-medium">Start Time</label>
         <input
           type="datetime-local"
           value={start}
@@ -179,6 +184,9 @@ export default function Dashboard() {
           className="border p-2 w-full"
           required
         />
+
+        {/* End Time */}
+        <label className="block font-medium">End Time</label>
         <input
           type="datetime-local"
           value={end}
@@ -186,14 +194,18 @@ export default function Dashboard() {
           className="border p-2 w-full"
           required
         />
+
         <button
           type="submit"
           className={`px-4 py-2 rounded text-white ${
-            editingBlock ? "bg-green-600 hover:bg-green-700" : "bg-blue-600 hover:bg-blue-700"
+            editingBlock
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-blue-600 hover:bg-blue-700"
           }`}
         >
           {editingBlock ? "Save Changes" : "Add Block"}
         </button>
+
         {editingBlock && (
           <button
             type="button"
@@ -209,6 +221,7 @@ export default function Dashboard() {
           </button>
         )}
       </form>
+
 
       {/* Upcoming Blocks */}
       <div className="mb-6">
