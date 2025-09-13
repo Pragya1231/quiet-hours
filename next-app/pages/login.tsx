@@ -24,15 +24,6 @@ export default function Login() {
       return
     }
 
-    // Send login notification
-    await fetch('/api/notifications', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'login',
-        userId: data.user?.id,
-      }),
-    });
 
     router.push('/dashboard')
   }
