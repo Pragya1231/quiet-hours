@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { createClient } from "@supabase/supabase-js";
-import Link from "next/link";
+import { createClient } from '@supabase/supabase-js';
+import { SITE_URL } from "../lib/constants";
+import Link from 'next/link'
 
-// Initialize Supabase client
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
-
-// Use this to handle dev vs production URLs
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export default function Register() {
   const router = useRouter();
@@ -21,42 +18,37 @@ export default function Register() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Redirect URL:', process.env.NEXT_PUBLIC_SITE_URL + '/dashboard');
 
-    try {
-      console.log("Redirect URL:", SITE_URL + "/dashboard");
+    // ✅ Create user in auth
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: firstname }, // goes to raw_user_meta_data
+        emailRedirectTo: SITE_URL + '/dashboard'
 
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: firstname },
-          emailRedirectTo: SITE_URL + "/dashboard", // works in dev and prod
-        },
-      });
+      },
+    });
 
-      if (error) {
-        setMessage(error.message);
-        return;
-      }
-
-      setMessage(
-        "Registration successful! Please check your email to confirm before logging in."
-      );
-
-      // Optional: Send notification via your API route
-      if (data.user?.id) {
-        await fetch("/api/notifications", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "register",
-            userId: data.user.id,
-          }),
-        });
-      }
-    } catch (err: any) {
-      setMessage(err.message || "Something went wrong.");
+    if (error) {
+      setMessage(error.message);
+      return;
     }
+
+    setMessage(
+      "Registration successful! Please check your email to confirm before logging in."
+    );
+
+    // Send notification
+  await fetch('/api/notifications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'register',
+      userId: data.user?.id, // from Supabase
+    }),
+  });
   };
 
   return (
@@ -102,14 +94,15 @@ export default function Register() {
         >
           Register
         </button>
-
         <p className="text-center text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link href="/login" className="text-blue-500 hover:underline">
+            Already have an account?{' '}
+        <Link href="/login" className="text-blue-500 hover:underline">
             Login
-          </Link>
+        </Link>
         </p>
+
       </form>
     </div>
   );
 }
+
