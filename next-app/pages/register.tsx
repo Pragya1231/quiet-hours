@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { createClient } from '@supabase/supabase-js';
+import { SITE_URL } from "../lib/constants";
 import Link from 'next/link'
 
 const supabase = createClient(
@@ -25,7 +26,7 @@ export default function Register() {
       password,
       options: {
         data: { full_name: firstname }, // goes to raw_user_meta_data
-        emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL + '/dashboard'
+        emailRedirectTo: SITE_URL + '/dashboard'
 
       },
     });
