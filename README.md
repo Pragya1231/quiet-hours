@@ -5,7 +5,7 @@ Tech Stack: Next.js, Supabase, MongoDB, TailwindCSS
 # Goal: 
 Authenticated users can create silent-study time blocks. A scheduled CRON function emails each user 10 minutes before their block starts, with no overlapping reminders per user.
 
-Features
+# Features:
 
 User Authentication via Supabase (sign-up, login, email confirmation).
 
@@ -29,7 +29,7 @@ type (register or reminder)
 
 CRON Scheduler: Runs every minute to check upcoming blocks and send reminder emails using supabase edge functions. Ensures no duplicate reminders per user.
 
-Local Testing
+# Local Testing:
 
 To run the project locally:
 
@@ -56,7 +56,7 @@ npm start
 
 Open your browser at: http://localhost:3000/register to create a new user.
 
-Production Usage
+# Production Usage:
 
 Sign Up:
 
@@ -80,7 +80,7 @@ If a block’s start time is within 10 minutes of the current time, the user rec
 
 Email reminders are logged in MongoDB.
 
-Database Structure
+# Database Structure:
 Supabase
 
 profile:
@@ -105,7 +105,7 @@ createdAt – Timestamp when the email was sent.
 
 type – Either register (confirmation) or reminder (block reminder).
 
-Tech Highlights
+# Tech Highlights:
 
 Supabase:
 
@@ -133,7 +133,7 @@ Checks for blocks starting in the next 10 minutes.
 
 Sends reminder emails without overlapping for a user.
 
-Environment Variables
+# Environment Variables:
 
 Make sure to configure the following in .env or on your deployment platform (Vercel):
 
