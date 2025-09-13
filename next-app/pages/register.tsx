@@ -18,7 +18,10 @@ export default function Register() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Redirect URL:', process.env.NEXT_PUBLIC_SITE_URL + '/dashboard');
+
+    const redirectTo = process.env.NEXT_PUBLIC_SITE_URL + "/dashboard";
+
+    console.log('Redirect URL:', redirectTo);
 
     // ✅ Create user in auth
     const { data, error } = await supabase.auth.signUp({
@@ -26,7 +29,7 @@ export default function Register() {
       password,
       options: {
         data: { full_name: firstname }, // goes to raw_user_meta_data
-        emailRedirectTo: SITE_URL + '/dashboard'
+        emailRedirectTo: redirectTo
 
       },
     });
