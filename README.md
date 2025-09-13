@@ -17,7 +17,7 @@ Email Notifications:
 
 Registration confirmation emails.
 
-Reminder emails 10 minutes before a scheduled study block starts.
+Reminder emails 10 minutes before a scheduled study block starts(check spam folder if not received).
 
 History Logging: MongoDB stores the history of sent emails with fields:
 
@@ -62,7 +62,7 @@ Sign Up:
 
 Register a new account if not already an existing user.
 
-A confirmation email is sent to your registered email.
+A confirmation email is sent to your registered email(check spam folder if not received).
 
 Click the confirmation link to be redirected to the dashboard.
 
@@ -131,7 +131,7 @@ Runs every minute.
 
 Checks for blocks starting in the next 10 minutes.
 
-Sends reminder emails without overlapping for a user.
+Sends reminder emails without overlapping for a user(check spam folder if not received).
 
 # Environment Variables:
 
