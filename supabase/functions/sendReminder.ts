@@ -1,52 +1,61 @@
-import { createClient } from '@supabase/supabase-js';
-import nodemailer from 'nodemailer';
-
-export default async function handler(req: Request) {
-  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!);
-
+// supabase/functions/send-reminders/index.ts
+import { createClient } from "jsr:@supabase/supabase-js@2";
+const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
+Deno.serve(async ()=>{
+  console.log("inside function");
   const now = new Date();
-  const tenMinLater = new Date(Date.now() + 10 * 60 * 1000);
-
-  const { data: blocks } = await supabase
-    .from('study_blocks')
-    .select('id, user_id, start_time, users (email)')
-    .gt('start_time', now.toISOString())
-    .lte('start_time', tenMinLater.toISOString());
-
-  if (!blocks) return new Response('No blocks', { status: 200 });
-
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
-
-  for (const block of blocks) {
-    const { data: existing } = await supabase
-      .from('notifications_sent')
-      .select('id')
-      .eq('block_id', block.id)
-      .eq('user_id', block.user_id)
-      .maybeSingle();
-
-    if (existing) continue;
-
-    await transporter.sendMail({
-      from: 'noreply@quiet-hours.com',
-      to: block.users.email,
-      subject: 'Quiet Hour Reminder',
-      text: `Your quiet hour starts at ${block.start_time}`
-    });
-
-    await supabase.from('notifications_sent').insert({
-      user_id: block.user_id,
-      block_id: block.id
+  const tenMinLater = new Date(now.getTime() + 10 * 60 * 1000);
+  const { data: blocks, error } = await supabase.from("study_blocks").select("id, user_id, title, start_time, profiles(email)").gt("start_time", now.toISOString()).lte("start_time", tenMinLater.toISOString()).eq("reminder_sent", false); // ✅ only fetch blocks not yet reminded
+  if (error) {
+    console.error(error);
+    return new Response("Query error: " + error.message, {
+      status: 500
     });
   }
-
-  return new Response('Done', { status: 200 });
-}
+  if (!blocks || blocks.length === 0) {
+    return new Response("No blocks", {
+      status: 200
+    });
+  }
+  for (const block of blocks){
+    const email = block.profiles?.email;
+    if (!email) continue;
+    await fetch("https://api.sendgrid.com/v3/mail/send", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${Deno.env.get("SENDGRID_API_KEY")}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        personalizations: [
+          {
+            to: [
+              {
+                email
+              }
+            ]
+          }
+        ],
+        from: {
+          email: "quiethour12@gmail.com",
+          name: "QUIETHOURS APP"
+        },
+        subject: "Reminder: Upcoming Study Block",
+        content: [
+          {
+            type: "text/plain",
+            value: `Your block "${block.title}" starts at ${block.start_time}`
+          }
+        ]
+      })
+    });
+    console.log(`Email sent to ${email}`);
+    // ✅ Mark reminder as sent
+    await supabase.from("study_blocks").update({
+      reminder_sent: true
+    }).eq("id", block.id);
+  }
+  return new Response("Done", {
+    status: 200
+  });
+});
