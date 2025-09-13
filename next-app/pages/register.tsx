@@ -23,12 +23,12 @@ export default function Register() {
 
     console.log('Redirect URL:', redirectTo);
 
-    // ✅ Create user in auth
+    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: firstname }, // goes to raw_user_meta_data
+        data: { full_name: firstname }, 
         emailRedirectTo: redirectTo
 
       },

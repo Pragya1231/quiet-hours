@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [end, setEnd] = useState("");
   const [blocks, setBlocks] = useState<any[]>([]);
 
-  // ✅ Session check
+  
   useEffect(() => {
     const getSession = async () => {
       const { data, error } = await supabase.auth.getSession();
@@ -29,7 +29,7 @@ export default function Dashboard() {
     getSession();
   }, [router]);
 
-  // ✅ Fetch blocks for logged-in user
+  // Fetch blocks for logged-in user
   const fetchBlocks = async (userId: string) => {
     const { data, error } = await supabase
       .from("study_blocks")
@@ -40,7 +40,7 @@ export default function Dashboard() {
     if (!error && data) setBlocks(data);
   };
 
-  // ✅ Add block
+  // Add block
   const addBlock = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session?.user) return;
@@ -69,7 +69,7 @@ export default function Dashboard() {
     <div className="p-8">
       <h1 className="text-xl font-bold mb-4">Dashboard</h1>
 
-      {/* ✅ Add Block Form */}
+      
       <form onSubmit={addBlock} className="space-y-4">
         <input
           type="text"
@@ -101,7 +101,7 @@ export default function Dashboard() {
         </button>
       </form>
 
-      {/* ✅ Display Blocks */}
+      
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-2">Your Blocks</h2>
         <ul className="space-y-2">
