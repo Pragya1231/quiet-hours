@@ -17,7 +17,7 @@ Email Notifications:
 
 Registration confirmation emails.
 
-Reminder emails 10 minutes before a scheduled study block starts(check spam folder if not received).
+Reminder emails 10 minutes before a scheduled study block starts (check spam folder if not received).
 
 History Logging: MongoDB stores the history of sent emails with fields:
 
@@ -27,7 +27,11 @@ createdAt
 
 type (register or reminder)
 
-CRON Scheduler: Runs every minute to check upcoming blocks and send reminder emails using supabase edge functions. Ensures no duplicate reminders per user.
+CRON Scheduler: Runs every minute to check upcoming blocks and send reminder emails using Supabase Edge Functions. Ensures no duplicate reminders per user.
+
+Logout Feature: Users can securely log out from their dashboard.
+
+Edit & Delete Features: Each study block can be edited or deleted directly from the dashboard.
 
 # Local Testing:
 
@@ -38,21 +42,17 @@ Clone the repository:
 git clone <repository-url>
 cd quiet-hours-scheduler-final/next-app
 
-
 Install dependencies:
 
 npm install
-
 
 Build the project:
 
 npm run build
 
-
 Start the project:
 
 npm start
-
 
 Open your browser at: http://localhost:3000/register to create a new user.
 
@@ -62,7 +62,7 @@ Sign Up:
 
 Register a new account if not already an existing user.
 
-A confirmation email is sent to your registered email(check spam folder if not received).
+A confirmation email is sent to your registered email (check spam folder if not received).
 
 Click the confirmation link to be redirected to the dashboard.
 
@@ -72,15 +72,24 @@ Add new study blocks specifying start and end times.
 
 Blocks are saved in the study_block table in Supabase.
 
+Edit or Delete:
+
+Edit or delete any existing block directly from the dashboard.
+
+Logout:
+
+Click the logout button to securely sign out.
+
 Email Reminders:
 
 A CRON function runs every minute.
 
-If a block’s start time is within 10 minutes of the current time, the user receives a reminder email.
+If a block’s start time is within 10 minutes of the current time, the user receives a reminder email (check spam folder if not received).
 
 Email reminders are logged in MongoDB.
 
 # Database Structure:
+
 Supabase
 
 profile:
@@ -131,7 +140,9 @@ Runs every minute.
 
 Checks for blocks starting in the next 10 minutes.
 
-Sends reminder emails without overlapping for a user(check spam folder if not received).
+Sends reminder emails without overlapping for a user (check spam folder if not received).
+
+Logout, Edit, and Delete features are implemented in the dashboard for better user management.
 
 # Environment Variables:
 
